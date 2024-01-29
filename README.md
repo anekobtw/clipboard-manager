@@ -1,2 +1,2 @@
 # clipboard
- win+v but in python
+ win+v doesn't work on my PC
