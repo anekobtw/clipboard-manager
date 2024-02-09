@@ -1,70 +1,67 @@
 import threading
 import time
 from tkinter import Tk
+from typing import NoReturn
 
 import customtkinter
 import keyboard
-import win32clipboard
+import pyperclip
 
 
-class App(customtkinter.CTk):
+class ClipboardManagerApp(customtkinter.CTk):
     def __init__(self):
         super().__init__()
-        self.is_shown = True
+        self.title('Clipboard Manager')
+        self.clipboard = []
+        self.create_widgets()
 
-    def create_widgets(self):
-        self.option_menu = customtkinter.CTkOptionMenu(self, values=cb)
+    def create_widgets(self) -> None:
+        self.option_menu = customtkinter.CTkOptionMenu(self, values=self.clipboard)
         self.option_menu.pack(padx=5, pady=5)
 
-        self.button = customtkinter.CTkButton(self, text='Insert', command=self.insert_text)
-        self.button.pack(padx=5, pady=5)
+        self.insert_button = customtkinter.CTkButton(self, text='Insert', command=self.insert_text)
+        self.insert_button.pack(padx=5, pady=5)
 
-    def update_option_menu(self):
-        self.option_menu.configure(values=cb)
+    def update_option_menu(self) -> None:
+        self.option_menu.configure(values=self.clipboard)
 
-    def insert_text(self):
+    def insert_text(self) -> None:
         text = self.option_menu.get()
-        self.is_shown = False
         self.withdraw()
         keyboard.write(text)
 
 
-def get_data(app: App):
+def get_clipboard_data(app: ClipboardManagerApp) -> None:
     time.sleep(0.1)  # prevents a bug
 
-    win32clipboard.OpenClipboard()
-    data = win32clipboard.GetClipboardData()
-    win32clipboard.CloseClipboard()
+    try:
+        data = pyperclip.paste()
+        if data and data not in app.clipboard:
+            app.clipboard.append(data)
+            app.update_option_menu()
+    except pyperclip.PyperclipException as e:
+        print(f"Error getting clipboard data: {e}")
 
-    if data not in cb:
-        cb.append(data)
-        app.update_option_menu()
 
-
-def keyboard_listener1(app: App):
+def keyboard_listener1(app: ClipboardManagerApp) -> NoReturn:
     while True:
         keyboard.wait('ctrl + c')
-        get_data(app)
+        get_clipboard_data(app)
 
 
-def keyboard_listener2(app: App):
+def keyboard_listener2(app: ClipboardManagerApp) -> NoReturn:
     while True:
         keyboard.wait('win + v')
-        if app.is_shown:
-            app.withdraw()
-            app.is_shown = False
-        else:
+        if app.state() == "withdrawn":
             x, y = Tk().winfo_pointerxy()
-            app.geometry(f'+{x}+{y}')
             app.deiconify()
-            app.is_shown = True
+            app.geometry(f'+{x}+{y}')
+        else:
+            app.withdraw()
 
 
 if __name__ == '__main__':
-    cb = []
-
-    app = App()
-    app.create_widgets()
+    app = ClipboardManagerApp()
 
     keyboard_thread1 = threading.Thread(target=keyboard_listener1, args=(app,), daemon=True)
     keyboard_thread1.start()
@@ -73,4 +70,3 @@ if __name__ == '__main__':
     keyboard_thread2.start()
 
     app.mainloop()
-
