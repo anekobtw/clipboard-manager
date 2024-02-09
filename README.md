@@ -1,8 +1,9 @@
-
 # Clipboard Manager
 
 The Clipboard Manager is a Python application designed to enhance clipboard management on your system. It provides a user-friendly interface along with convenient keyboard shortcuts for efficient handling of clipboard content.
+
 ## Demo
+![](https://github.com/anekobtw/clipboard-manager/blob/main/preview.mp4)
 
 ## Contributing
 
