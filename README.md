@@ -1,11 +1,5 @@
 # Clipboard Manager
-The Clipboard Manager is a Python application designed to enhance clipboard management on your system. It provides a user-friendly interface along with convenient keyboard shortcuts for efficient handling of clipboard content.
-
-## Features
-- Clipboard Monitoring: The application monitors the system clipboard for changes and automatically updates the clipboard history.
-- Insert Text: Users can insert text from the clipboard history into any active text field with a single click.
-- Delete Text: Unwanted items in the clipboard history can be removed with the delete function.
-- Minimalist GUI: The user interface is clean and intuitive, providing easy access to clipboard history.
+A simple Python application built using customtkinter that allows users to manage their clipboard history. It captures copied text and stores it in a list, providing options to insert or delete items from the clipboard history.
 
 ## Quick start
 1. Clone the repository:
@@ -24,8 +18,11 @@ $ python clipboard.py
 ```
 
 4. Press Ctrl + C to capture text copied to the clipboard.
+
 5. Press Win + V to toggle the visibility of the Clipboard Manager window.
+
 6. Use the "Insert" button to insert selected text from the clipboard history.
+
 7. Use the "Delete" button to remove selected text from the clipboard history.
 
 ## Acknowledgements
